@@ -1,0 +1,97 @@
+<div class="space-y-4">
+    <!-- Header & Filter -->
+    <div class="sticky top-16 bg-gray-50 pt-2 pb-2 z-10">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-gray-900">Clients</h2>
+            <a href="/clients/new"
+                class="w-8 h-8 rounded-full bg-primary-600 text-white flex items-center justify-center shadow-lg shadow-primary-600/30">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+
+        <!-- Search -->
+        <form action="/clients" method="GET" class="relative">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" name="search" value="<%= typeof search !== 'undefined' ? search : '' %>"
+                placeholder="Search clients..."
+                class="w-full bg-white border-0 pl-10 pr-4 py-3 rounded-xl shadow-sm text-sm focus:ring-2 focus:ring-primary-500">
+            <% if (typeof status !=='undefined' && status) { %>
+                <input type="hidden" name="status" value="<%= status %>">
+                <% } %>
+        </form>
+
+        <!-- Filter Pills -->
+        <div class="flex gap-2 overflow-x-auto py-3 no-scrollbar">
+            <a href="/clients"
+                class="whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold <%= !status ? 'bg-primary-600 text-white' : 'bg-white text-gray-600 border border-gray-200' %>">
+                All
+            </a>
+            <a href="/clients?status=Upcoming"
+                class="whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold <%= status === 'Upcoming' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 border border-gray-200' %>">
+                Upcoming
+            </a>
+            <a href="/clients?status=Pending"
+                class="whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold <%= status === 'Pending' ? 'bg-orange-500 text-white' : 'bg-white text-gray-600 border border-gray-200' %>">
+                Pending Payment
+            </a>
+            <a href="/clients?status=Completed"
+                class="whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-semibold <%= status === 'Completed' ? 'bg-gray-600 text-white' : 'bg-white text-gray-600 border border-gray-200' %>">
+                History
+            </a>
+        </div>
+    </div>
+
+    <!-- Client List -->
+    <div class="space-y-3 pb-20">
+        <% if (clients.length> 0) { %>
+            <% clients.forEach(client=> { %>
+                <a href="/clients/<%= client._id %>"
+                    class="block bg-white p-4 rounded-xl shadow-sm border border-gray-100 active:scale-[0.98] transition-transform">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-900 leading-tight">
+                                <%= client.name %>
+                            </h3>
+                            <p class="text-xs text-gray-500 mt-0.5">
+                                <i class="fas fa-calendar-alt mr-1 text-gray-400"></i>
+                                <%= client.eventDate ? moment(client.eventDate).format('MMM Do, YYYY') : 'No Date' %>
+                            </p>
+                        </div>
+                        <% if (client.event) { %>
+                            <span
+                                class="px-2 py-1 rounded-lg bg-indigo-50 text-indigo-600 text-[10px] font-bold uppercase tracking-wide">
+                                <%= client.event %>
+                            </span>
+                            <% } %>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-3 border-t border-gray-50">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="text-xs font-medium px-2 py-0.5 rounded-md <%= client.totalPending > 0 ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600' %>">
+                                <%= client.totalPending> 0 ? '₹' + client.totalPending.toLocaleString() + ' Due' :
+                                    'Paid' %>
+                            </span>
+                        </div>
+                        <div class="flex -space-x-2">
+                            <!-- Placeholder for team avatars if we had them -->
+                            <div
+                                class="w-6 h-6 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-[8px] text-gray-500">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+                <% }) %>
+                    <% } else { %>
+                        <div class="text-center py-12">
+                            <div
+                                class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400">
+                                <i class="fas fa-search text-2xl"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900">No Clients Found</h3>
+                            <p class="text-sm text-gray-500">Try adjusting your search or filters.</p>
+                        </div>
+                        <% } %>
+    </div>
+</div>

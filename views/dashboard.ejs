@@ -1,0 +1,174 @@
+<div class="space-y-6">
+    <!-- Welcome Header -->
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-xl font-bold text-gray-800">Hello, <%= user.name.split(' ')[0] %> 👋</h2>
+      <p class="text-sm text-gray-500"><%= moment().format(' dddd, MMMM Do YYYY') %>
+                    </p>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden border-2 border-white shadow-sm">
+            <img src="<%= user.profilePhoto || 'https://ui-avatars.com/api/?name=' + user.name %>" alt="Profile"
+                class="w-full h-full object-cover">
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 gap-4">
+        <!-- Active Clients -->
+        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <i class="fas fa-users"></i>
+                </div>
+                <span class="text-xs font-medium text-gray-500">Clients</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900">
+                <%= clientCount %>
+            </h3>
+        </div>
+
+        <!-- Attendance -->
+        <a href="/attendance" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <span class="text-xs font-medium text-gray-500">In Office</span>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900">
+                <%= presentCount %>
+            </h3>
+        </a>
+    </div>
+
+    <!-- Work In Progress Widget -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-bold text-gray-900">Work In Progress</h3>
+            <span class="text-xs font-medium bg-gray-100 text-gray-600 px-2 py-1 rounded-md">Today</span>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Events Today -->
+            <% if (typeof eventsToday !=='undefined' && eventsToday.length> 0) { %>
+                <% eventsToday.forEach(event=> { %>
+                    <div class="flex items-start gap-3 pb-3 border-b border-gray-50 last:border-0 last:pb-0">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-sm font-semibold text-gray-900 truncate">
+                                <%= event.name %>
+                            </h4>
+                            <p class="text-xs text-gray-500 truncate">
+                                <%= event.event %> • <%= event.location || 'No Location' %>
+                            </p>
+                        </div>
+                        <a href="/clients/<%= event._id %>" class="p-2 text-gray-400 hover:text-primary-600">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </div>
+                    <% }) %>
+                        <% } else { %>
+                            <p class="text-sm text-gray-400 text-center py-2">No events scheduled today.</p>
+                            <% } %>
+
+                                <!-- Active Tasks -->
+                                <% if (activeTasks.length> 0) { %>
+                                    <div class="pt-2">
+                                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Team
+                                            Activity</h4>
+                                        <% activeTasks.forEach(task=> { %>
+                                            <div class="flex items-center gap-3 mb-3 last:mb-0">
+                                                <div
+                                                    class="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                                                    <img src="<%= task.assignedTo.profilePhoto || 'https://ui-avatars.com/api/?name=' + task.assignedTo.name %>"
+                                                        class="w-full h-full object-cover">
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <p class="text-sm font-medium text-gray-900 truncate">
+                                                        <%= task.assignedTo.name %>
+                                                    </p>
+                                                    <p class="text-xs text-gray-500 truncate">
+                                                        <%= task.title %>
+                                                    </p>
+                                                </div>
+                                                <span
+                                                    class="text-[10px] font-bold px-2 py-1 rounded-full bg-blue-50 text-blue-600">
+                                                    Working
+                                                </span>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                                    <% } %>
+        </div>
+    </div>
+
+    <!-- Attendance Section -->
+    <div class="grid grid-cols-1 gap-4">
+        <!-- Present Staff -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-green-700">Present Staff</h3>
+                <span class="text-xs font-bold bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                    <%= typeof presentStaff !=='undefined' ? presentStaff.length : 0 %>
+                </span>
+            </div>
+
+            <% if (typeof presentStaff !=='undefined' && presentStaff.length> 0) { %>
+                <div class="space-y-3">
+                    <% presentStaff.forEach(staff=> { %>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex-shrink-0">
+                                    <img src="<%= staff.profilePhoto || 'https://ui-avatars.com/api/?name=' + staff.name %>"
+                                        class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-gray-900">
+                                        <%= staff.name %>
+                                    </p>
+                                    <p class="text-[10px] text-gray-500">
+                                        clocked in at <%= staff.clockIn ? moment(staff.clockIn).format('h:mm A')
+                                            : '--:--' %>
+                                    </p>
+                                </div>
+                            </div>
+                            <span class="w-2 h-2 rounded-full bg-green-500"></span>
+                        </div>
+                        <% }) %>
+                </div>
+                <% } else { %>
+                    <p class="text-sm text-gray-400 text-center py-2">No one has clocked in yet.</p>
+                    <% } %>
+        </div>
+
+        <!-- Absent Staff -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-bold text-red-700">Absent Staff</h3>
+                <span class="text-xs font-bold bg-red-100 text-red-700 px-2 py-1 rounded-full">
+                    <%= typeof absentStaff !=='undefined' ? absentStaff.length : 0 %>
+                </span>
+            </div>
+
+            <% if (typeof absentStaff !=='undefined' && absentStaff.length> 0) { %>
+                <div class="grid grid-cols-4 gap-2">
+                    <% absentStaff.forEach(staff=> { %>
+                        <div class="flex flex-col items-center">
+                            <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-200 grayscale opacity-70 mb-1">
+                                <img src="<%= staff.profilePhoto || 'https://ui-avatars.com/api/?name=' + staff.name %>"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-[10px] text-gray-500 truncate w-full text-center">
+                                <%= staff.name.split(' ')[0] %></p>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p class="text-sm text-gray-400 text-center py-2">Everyone is present!</p>
+            <% } %>
+        </div>
+    </div>
+</div>

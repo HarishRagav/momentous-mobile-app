@@ -16,14 +16,14 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 dotenv.config();
 
 // Import models from parent directory
-const User = require('../models/User');
-const Client = require('../models/Client');
-const Attendance = require('../models/Attendance');
-const Payroll = require('../models/Payroll');
-const TaskAssignment = require('../models/TaskAssignment');
-const Role = require('../models/Role');
-const Settings = require('../models/Settings');
-const ClientEvent = require('../models/ClientEvent');
+const User = require('./models/User');
+const Client = require('./models/Client');
+const Attendance = require('./models/Attendance');
+const Payroll = require('./models/Payroll');
+const TaskAssignment = require('./models/TaskAssignment');
+const Role = require('./models/Role');
+const Settings = require('./models/Settings');
+const ClientEvent = require('./models/ClientEvent');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -686,3 +686,4 @@ app.get('/attendance', ensureAuthenticated, (req, res) => {
 
 // Start Server
 startServer();
+
